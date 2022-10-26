@@ -1,0 +1,100 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:fn="http://java.sun.com/jstl/functions">
+
+
+
+<ui:composition template="/templates/BasicTemplate.xhtml">
+	<ui:define name="content">
+		<h:form id="company-table-form">
+			<p:messages showDetail="true" autoUpdate="true" closable="true"
+				globalOnly="true" severity="info, warn" />
+
+			<p:dataTable var="company"
+				value="#{manageCompanyBean.companyLazyList}" paginator="true"
+				paginatorAlwaysVisible="true" rows="30" lazy="true"
+				paginatorPosition="bottom" resizableColumns="true"
+				rowKey="#{company.id}" id="company-table"
+				style="margin-top:0px !important" sortBy="#{company.name}"
+				rowsPerPageTemplate="10, 30, 50, 100, 500, 1000">
+				<f:facet name="header">
+            		Companies
+        		</f:facet>
+
+				<p:column headerText="Code" width="30%" filterBy="#{company.code}"
+					sortBy="#{company.code}">
+					<h:outputText value="#{company.code}" />
+				</p:column>
+
+				<p:column headerText="Name" width="40%" filterBy="#{company.name}"
+					sortBy="#{company.name}">
+					<h:outputText value="#{company.name}" />
+				</p:column>
+
+				<p:column headerText="Country" width="25%"
+					filterBy="#{company.country}" sortBy="#{company.country}">
+					<h:outputText value="#{company.country}" />
+				</p:column>
+
+				<p:column width="60" style="text-align:center !important"
+					headerText="Licenses">
+					<p:commandButton icon="fa fa-file-text-o"
+						styleClass="button-with-border button-in-grid"
+						action="#{manageCompanyBean.getCompanyDetails}"
+						update=":company-detail-form">
+						<f:setPropertyActionListener value="#{company}"
+							target="#{manageCompanyBean.selectedCompany}" />
+					</p:commandButton>
+				</p:column>
+			</p:dataTable>
+		</h:form>
+
+		<h:form id="company-detail-form">
+			<p:dialog
+				header="View Company Information - #{manageCompanyBean.selectedCompany.name} (#{manageCompanyBean.selectedCompany.code})"
+				widgetVar="company-details-dialog" modal="true" closeOnEscape="true"
+				id="view-company" resizable="false" width="72%"
+				styleClass="wide-dialog" dynamic="false">
+				<p:dataTable var="license" style="width:100%" lazy="true"
+					value="#{manageCompanyBean.authorizedLicensesParties}"
+					paginator="true" paginatorAlwaysVisible="true" rows="10"
+					resizableColumns="true" paginatorPosition="bottom"
+					sortBy="#{party.name}" rowKey="#{party.id}" id="licenses-party">
+					<f:facet name="header">
+            					Authorized Licenses as Approved Party
+        					</f:facet>
+					<p:column headerText="Name" width="60%">
+						<h:outputText value="#{license.name}" />
+					</p:column>
+					<p:column headerText="Type" width="40%">
+						<h:outputText value="#{license.type}" />
+					</p:column>
+				</p:dataTable>
+				<p:separator />
+				<p:dataTable var="license" style="width:100%" lazy="true"
+					value="#{manageCompanyBean.authorizedLicensesSublicensees}"
+					paginator="true" paginatorAlwaysVisible="true" rows="10"
+					resizableColumns="true" paginatorPosition="bottom"
+					sortBy="#{party.name}" rowKey="#{party.id}"
+					id="licenses-sublicensees">
+					<f:facet name="header">
+            					Authorized Licenses as Approved Sublicensees
+        					</f:facet>
+					<p:column headerText="Name" width="60%">
+						<h:outputText value="#{license.name}" />
+					</p:column>
+					<p:column headerText="Type" width="40%">
+						<h:outputText value="#{license.type}" />
+					</p:column>
+				</p:dataTable>
+			</p:dialog>
+		</h:form>
+	</ui:define>
+</ui:composition>
+</html>

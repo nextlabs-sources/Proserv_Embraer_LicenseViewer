@@ -1,0 +1,91 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+
+<ui:composition template="/templates/BasicTemplate.xhtml">
+	<ui:define name="content">
+		<h:outputText value="Synchronize Database" styleClass="page-title"></h:outputText>
+		<p:separator />
+		<p:messages id="messages" showDetail="true" autoUpdate="true"
+			closable="true" globalOnly="true" />
+
+		<h:form id="sync-form">
+			<p:poll interval="2"
+				ignoreAutoUpdate="false" id="poll"
+				listener="#{synchronizationBean.updateProcess}"
+				update=":sync-form:license-executing-task-grid :sync-form:sync-toolbar" />
+			<h:panelGrid columns="1" cellspacing="7">
+				<h:outputText styleClass="context-helper"
+					value="Synchronization Process monitors the last modified date of the source files. If the source files has not been updated since the last sync, the process will go to sleep again."></h:outputText>
+				<h:outputText styleClass="context-helper"
+					value="Click Sync Now to skip the sleeping period."></h:outputText>
+				<h:outputText styleClass="context-helper"
+					value="Click Force Sync to skip the sleeping period and ignore the last-modified-date check."></h:outputText>
+				<h:outputText styleClass="context-helper"
+					value="Click Pause to pause the synchronization process. The process will sleep until the Resume button is clicked. Sync Now and Force Sync still work when the process is in pause"></h:outputText>
+			</h:panelGrid>
+			<p:toolbar styleClass="data-toolbar" id="sync-toolbar">
+				<f:facet name="left">
+					<p:commandButton id="sync-button" value="Sync Now"
+						icon="fa fa-retweet" action="#{synchronizationBean.manualSync}"
+						disabled="#{!synchronizationBean.syncTask.allowNewSync}"
+						update=":sync-form:sync-toolbar :sync-form:message-panel :sync-form:poll :sync-form:summary-grid"
+						styleClass="button-with-border-top-left"></p:commandButton>
+					<p:commandButton id="pause-button" value="Pause" icon="fa fa-pause"
+						action="#{synchronizationBean.pauseSync}"
+						disabled="#{!synchronizationBean.syncTask.allowNewSync}"
+						rendered="#{!synchronizationBean.syncTask.isPause}"
+						update=":sync-form:sync-toolbar"></p:commandButton>
+					<p:commandButton id="resume-button" value="Resume"
+						icon="fa fa-play" action="#{synchronizationBean.resume}"
+						disabled="#{!synchronizationBean.syncTask.allowNewSync}"
+						rendered="#{synchronizationBean.syncTask.isPause}"
+						update=":sync-form:sync-toolbar"></p:commandButton>
+				</f:facet>
+				<f:facet name="right">
+					<p:commandButton value="Update Interface"
+						styleClass="button-with-border-top-right" icon="ui-icon-refresh"
+						style="float:right"
+						update=":sync-form:license-executing-task-grid :sync-form:sync-toolbar :sync-form:message-panel :sync-form:poll"></p:commandButton>
+				</f:facet>
+			</p:toolbar>
+
+
+
+			<h:panelGrid columns="1" id="license-executing-task-grid"
+				style="margin-top:2%;" width="100%">
+				<h:panelGrid columns="2" width="100%" id = "summary-grid">
+					<h:outputText
+						value="Licenses processed: #{synchronizationBean.syncTask.processLicenseCount}" />
+					<h:outputText style="float:right"
+						value="Last sync completed at: #{synchronizationBean.syncTask.lastSync}" />
+					<h:outputText
+						value="NDA rows processed: #{synchronizationBean.syncTask.processNDACount}" />
+					<h:outputText />
+					<h:outputText value="The synchronization process is sleeping."
+						rendered="#{!synchronizationBean.syncTask.isSynching}" />
+
+				</h:panelGrid>
+
+				<p:dataTable id="message-panel" paginator="true"
+					styleClass="syncTable" paginatorPosition="bottom"
+					paginatorAlwaysVisible="true" rows="1000"
+					value="#{synchronizationBean.syncTask.messages}" var="message"
+					rowsPerPageTemplate="50, 100, 500, 1000, 2000, 5000, 10000">
+					<p:column headerText="Messages">
+						<h:outputText value="#{message}" escape="false" />
+					</p:column>
+				</p:dataTable>
+			</h:panelGrid>
+		</h:form>
+	</ui:define>
+	<ui:define name="footer">
+	</ui:define>
+</ui:composition>
+</html>

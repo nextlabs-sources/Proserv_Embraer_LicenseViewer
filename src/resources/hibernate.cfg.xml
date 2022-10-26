@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN" "classpath://org/hibernate/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+	<session-factory>
+		<property name="hibernate.connection.driver_class">oracle.jdbc.driver.OracleDriver</property>
+		<property name="hibernate.connection.url">jdbc:oracle:thin:@10.23.58.112:1521:GENORCL</property>
+		<property name="hibernate.connection.username">embraeradmin</property>
+		<property name="hibernate.connection.password">Nextlabs123</property>
+		<property name="hibernate.dialect">org.hibernate.dialect.Oracle10gDialect</property>
+		<property name="hibernate.default_schema">embraeradmin</property>
+		<property name="show_sql">true</property>
+
+		<!-- Mapping with model class containing annotations -->
+		<mapping class="main.java.entity.License"/>
+	</session-factory>
+</hibernate-configuration>

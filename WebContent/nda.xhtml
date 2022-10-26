@@ -1,0 +1,41 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:fn="http://java.sun.com/jstl/functions">
+
+<ui:composition template="/templates/BasicTemplate.xhtml">
+	<ui:define name="content">
+		<h:form id="nda-table-form">
+			<p:messages showDetail="true" autoUpdate="true" closable="true"
+				globalOnly="true" severity="info, warn" />
+
+			<p:dataTable var="nda"
+				value="#{manageNDABean.ndaLazyList}" paginator="true"
+				paginatorAlwaysVisible="true" rows="30" lazy="true"
+				paginatorPosition="bottom" resizableColumns="true"
+				rowKey="#{nda.id}" id="nda-table"
+				style="margin-top:0px !important" sortBy="#{nda.name}"
+				rowsPerPageTemplate="10, 30, 50, 100, 500, 1000">
+				<f:facet name="header">
+            		Non-Disclosure Agreement
+        		</f:facet>
+
+				<p:column headerText="User ID" width="50%"
+					filterBy="#{nda.userID}" sortBy="#{nda.userID}">
+					<h:outputText value="#{nda.userID}" />
+				</p:column>
+
+				<p:column headerText="License" width="50%"
+					filterBy="#{nda.licenseName}" sortBy="#{nda.licenseName}">
+					<h:outputText value="#{nda.licenseName}" />
+				</p:column>
+			</p:dataTable>
+		</h:form>
+	</ui:define>
+</ui:composition>
+</html>

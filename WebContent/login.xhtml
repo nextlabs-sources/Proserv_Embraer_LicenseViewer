@@ -1,0 +1,44 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+          "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core">
+<h:head>
+	<title><ui:insert name="title">License Viewer</ui:insert></title>
+	<h:outputStylesheet name="style.css" library="css" />
+	<link rel="shortcut icon" type="image/x-icon"
+		href="resources/images/favicon2.ico" />
+</h:head>
+
+<h:body style="background:white">
+	<f:event type="preRenderView" listener="#{userSessionBean.preRenderLogin}" />
+
+	<div id="content">
+		<div class="login-panel">
+			<h:form class="login-form">
+				<h:panelGrid columns="2" cellpadding="2" styleClass="login-grid">
+					<h:outputText value="Username"></h:outputText>
+					<p:inputText value="#{userSessionBean.userName}"></p:inputText>
+
+					<h:outputText value="Password"></h:outputText>
+					<p:password value="#{userSessionBean.password}"></p:password>
+
+					<h:outputText />
+
+				</h:panelGrid>
+				<h:panelGrid columns="1" width="100%" cellspacing = "0">
+					<p:commandButton action="#{userSessionBean.login}" value="Login"
+						ajax="false" styleClass="button-with-border" style="width:100%"></p:commandButton>
+				</h:panelGrid>
+			</h:form>
+			<p:messages showDetail="true" autoUpdate="true" closable="true"
+				globalOnly="true"
+				style="position:absolute;float:right;top:95%;width:100%" />
+		</div>
+	</div>
+
+</h:body>
+
+</html>

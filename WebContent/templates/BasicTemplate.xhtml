@@ -1,0 +1,82 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+          "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core">
+<h:head>
+	<title><ui:insert name="title">License Viewer</ui:insert></title>
+	<h:outputStylesheet name="style.css" library="css" />
+	<link rel="shortcut icon" type="image/x-icon"
+		href="resources/images/favicon2.ico" />
+</h:head>
+
+<h:body>
+	<f:event type="preRenderView" listener="#{userSessionBean.preRender}" />
+	<h:panelGroup>
+		<div class="header">
+			<img src="resources/images/logo.PNG" class="header-logo" />
+
+			<h:form styleClass="header-form">
+				<h:outputText value="License Viewer" styleClass="header-title"></h:outputText>
+				<p:commandButton value="Logout" action="#{userSessionBean.logout}"
+					icon="ui-icon-arrowthickstop-1-w" ajax="false"
+					styleClass="header-button button-with-border"></p:commandButton>
+			</h:form>
+
+			<ui:insert name="header">
+			</ui:insert>
+		</div>
+		<div class="header-separator"></div>
+	</h:panelGroup>
+	<div class="template-body">
+		<table class="layout" id="layout-table">
+			<tr style="width: 100%">
+				<td class="layout-left"><h:form id="menu-form">
+						<p:menu styleClass="menu">
+							<p:menuitem value="Licenses"
+								styleClass="#{userSessionBean.getMenuClass('licenses')}"
+								action="#{userSessionBean.setActive('licenses')}" />
+							<p:menuitem value="Companies"
+								styleClass="#{userSessionBean.getMenuClass('companies')}"
+								action="#{userSessionBean.setActive('companies')}" />
+							<p:menuitem value="Nationalities"
+								styleClass="#{userSessionBean.getMenuClass('nationalities')}"
+								action="#{userSessionBean.setActive('nationalities')}" />
+							<p:menuitem value="NDA"
+								styleClass="#{userSessionBean.getMenuClass('nda')}"
+								action="#{userSessionBean.setActive('nda')}" />
+							<p:menuitem value="Synchronize"
+								styleClass="#{userSessionBean.getMenuClass('synchronize')}"
+								action="#{userSessionBean.setActive('synchronize')}" />
+						</p:menu>
+					</h:form></td>
+				<td class="layout-right"><p:growl id="growl" showDetail="true"
+						autoUpdate="true" sticky="false" severity="info, error" /> <ui:insert
+						name="content"></ui:insert> <img id="loading-icon"
+					src="resources/images/bdrWh.png" class='loading-icon' /> <script
+						type="text/javascript">
+						function loading() {
+							document.getElementById("loading-icon").style.display = "block";
+						}
+
+						function doneLoading() {
+							document.getElementById("loading-icon").style.display = "none";
+						}
+					</script></td>
+			</tr>
+		</table>
+	</div>
+	<div id="footer" class="footer">
+		<h:panelGrid columns="2" styleClass="footer-grid">
+			<h:outputText value="Powered by" style="color: #AAAAAA"></h:outputText>
+			<h:graphicImage url="resources/images/logo_nextlabs.png"
+				class="footer-logo-nextlabs" />
+		</h:panelGrid>
+		<ui:insert name="footer"></ui:insert>
+	</div>
+
+</h:body>
+
+</html>

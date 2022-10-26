@@ -1,0 +1,75 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:fn="http://java.sun.com/jstl/functions">
+
+<ui:composition template="/templates/BasicTemplate.xhtml">
+	<ui:define name="content">
+		<h:form id="nationality-form">
+			<p:messages showDetail="true" autoUpdate="true" closable="true"
+				globalOnly="true" severity="info, warn" />
+			<p:toolbar styleClass="data-toolbar1 data-toolbar" id="nationality-toolbar">
+				<f:facet name="right">
+					<p:commandButton type="button" value="New" icon="ui-icon-document"
+						onclick="PF('create-new-dialog').show();"
+						update=":create-new-form:create-new-dialog"
+						styleClass="button-with-border-top-right" />
+				</f:facet>
+			</p:toolbar>
+			<p:dataTable var="nationality"
+				value="#{manageNationalityBean.nationalityLazyList}"
+				paginator="true" paginatorAlwaysVisible="true" rows="30" lazy="true"
+				paginatorPosition="bottom" resizableColumns="true"
+				rowKey="#{nationality.id}" id="nationality-table"
+				style="margin-top:0px !important" sortBy="#{nationality.name}"
+				rowsPerPageTemplate="10, 30, 50, 100, 500, 1000">
+				<f:facet name="header">
+            		Nationalities
+        		</f:facet>
+
+				<p:column headerText="Name" width="60%"
+					filterBy="#{nationality.name}" sortBy="#{nationality.name}">
+					<h:outputText value="#{nationality.name}" />
+				</p:column>
+
+				<p:column headerText="Code" width="40%"
+					filterBy="#{nationality.code}" sortBy="#{nationality.code}">
+					<h:outputText value="#{nationality.code}" />
+				</p:column>
+			</p:dataTable>
+		</h:form>
+
+		<h:form id="create-new-form">
+			<p:dialog header="Create New Nationality"
+				widgetVar="create-new-dialog" modal="true" closeOnEscape="true"
+				width="auto" id="create-new-dialog" resizable="false">
+				<h:panelGrid columns="3" cellspacing="7" styleClass="dialog-grid"
+					id="create-new-dialog-grid">
+					<p:outputLabel for="nationality-new-value" value="Name" />
+					<p:inputText value="#{manageNationalityBean.newNationality.name}"
+						required="true" id="nationality-new-value"></p:inputText>
+					<p:message for="nationality-new-value" display="tooltip" />
+
+
+					<p:outputLabel for="nationality-new-code" value="Code" />
+					<p:inputText value="#{manageNationalityBean.newNationality.code}"
+						required="true" id="nationality-new-code"></p:inputText>
+					<p:message for="nationality-new-code" display="tooltip" />
+				</h:panelGrid>
+				<p:commandButton value="Create"
+					styleClass="dialog-button-single button-with-border"
+					action="#{manageNationalityBean.createNationality}"
+					id="nationality-new-button"
+					update=":nationality-form:nationality-table create-new-dialog-grid create-new-msg :nationality-form:nationality-toolbar"></p:commandButton>
+				<p:messages showDetail="true" autoUpdate="true" closable="true"
+					severity="error" for="create-new-form" id="create-new-msg" />
+			</p:dialog>
+		</h:form>
+	</ui:define>
+</ui:composition>
+</html>

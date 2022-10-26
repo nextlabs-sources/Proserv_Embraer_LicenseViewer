@@ -1,0 +1,163 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:fn="http://java.sun.com/jstl/functions">
+
+<ui:composition template="/templates/BasicTemplate.xhtml">
+	<ui:define name="content">
+		<h:form id="license-table-form">
+			<p:messages showDetail="true" autoUpdate="true" closable="true"
+				globalOnly="true" severity="info, warn" />
+
+			<p:dataTable var="license"
+				value="#{manageLicenseBean.licenseLazyList}" paginator="true"
+				paginatorAlwaysVisible="true" rows="30" lazy="true"
+				paginatorPosition="bottom" resizableColumns="true"
+				rowKey="#{license.id}" id="license-table"
+				style="margin-top:0px !important" sortBy="#{license.name}"
+				rowsPerPageTemplate="10, 30, 50, 100, 500, 1000">
+				<f:facet name="header">
+            		Licenses
+        		</f:facet>
+
+				<p:column headerText="Name" width="60%" filterBy="#{license.name}"
+					sortBy="#{license.name}">
+					<h:outputText value="#{license.name}" />
+				</p:column>
+
+				<p:column headerText="Type" width="35%" filterBy="#{license.type}"
+					sortBy="#{license.type}">
+					<h:outputText value="#{license.type}" />
+				</p:column>
+
+
+				<p:column width="60" style="text-align:center !important"
+					headerText="Details">
+					<p:commandButton icon="fa fa-search"
+						styleClass="button-with-border button-in-grid"
+						action="#{manageLicenseBean.getLicenseDetails}"
+						update=":license-detail-form">
+						<f:setPropertyActionListener value="#{license}"
+							target="#{manageLicenseBean.selectedLicense}" />
+					</p:commandButton>
+				</p:column>
+			</p:dataTable>
+		</h:form>
+
+		<h:form id="license-detail-form">
+			<p:dialog
+				header="View License Information - #{manageLicenseBean.selectedLicense.name}"
+				widgetVar="license-details-dialog" modal="true" closeOnEscape="true"
+				id="view-license" resizable="false" width="72%"
+				styleClass="wide-dialog" dynamic="true">
+
+				<p:tabView>
+					<p:tab title="Companies">
+						<p:dataTable var="party" style="width:100%" lazy="true"
+							value="#{manageLicenseBean.licenseApprovedParties}"
+							paginator="true" paginatorAlwaysVisible="true" rows="10"
+							resizableColumns="true" paginatorPosition="bottom"
+							sortBy="#{party.name}" rowKey="#{party.id}"
+							id="license-approved-parties">
+							<f:facet name="header">
+            					Approved Parties
+        					</f:facet>
+							<p:column headerText="Code" width="30%" >
+								<h:outputText value="#{party.code}" />
+							</p:column>
+							<p:column headerText="Name" width="40%" >
+								<h:outputText value="#{party.name}" />
+							</p:column>
+							<p:column headerText="Country" width="20%">
+								<h:outputText value="#{party.country}" />
+							</p:column>
+						</p:dataTable>
+						<p:separator />
+						<p:dataTable var="sublicensee" style="width:100%" lazy="true"
+							value="#{manageLicenseBean.licenseApprovedSublicensees}"
+							paginator="true" paginatorAlwaysVisible="true" rows="10"
+							resizableColumns="true" paginatorPosition="bottom"
+							sortBy="#{sublicensee.name}" rowKey="#{sublicensee.id}"
+							id="license-approved-sublicensees">
+							<f:facet name="header">
+            					Approved Sublicensees
+        					</f:facet>
+							<p:column headerText="Code" width="30%">
+								<h:outputText value="#{sublicensee.code}" />
+							</p:column>
+							<p:column headerText="Name" width="30%">
+								<h:outputText value="#{sublicensee.name}" />
+							</p:column>
+							<p:column headerText="Country" width="30%">
+								<h:outputText value="#{sublicensee.country}" />
+							</p:column>
+							<p:column headerText="NDA" width="20%">
+								<h:outputText value="Yes" rendered="#{sublicensee.nda == 1}" />
+								<h:outputText value="No" rendered="#{sublicensee.nda != 1}" />
+							</p:column>
+						</p:dataTable>
+					</p:tab>
+					<p:tab title="Nationalities">
+						<p:dataTable var="nationality" style="width:100%" lazy="true"
+							value="#{manageLicenseBean.licenseApprovedNationalities}"
+							paginator="true" paginatorAlwaysVisible="true" rows="10"
+							resizableColumns="true" paginatorPosition="bottom"
+							sortBy="#{nationality.name}" rowKey="#{nationality.id}"
+							id="license-approved-nationalities">
+							<f:facet name="header">
+            					Approved Nationalities
+        					</f:facet>
+							<p:column headerText="Name" width="60%">
+								<h:outputText value="#{nationality.name}" />
+							</p:column>
+							<p:column headerText="Code" width="40%">
+								<h:outputText value="#{nationality.code}" />
+							</p:column>
+						</p:dataTable>
+						<p:separator />
+						<p:dataTable var="nationality" style="width:100%" lazy="true"
+							value="#{manageLicenseBean.licenseDeniedNationalities}"
+							paginator="true" paginatorAlwaysVisible="true" rows="10"
+							resizableColumns="true" paginatorPosition="bottom"
+							sortBy="#{nationality.name}" rowKey="#{nationality.id}"
+							id="license-denied-nationalities">
+							<f:facet name="header">
+            					Denied Nationalities
+        					</f:facet>
+							<p:column headerText="Name" width="60%">
+								<h:outputText value="#{nationality.name}" />
+							</p:column>
+							<p:column headerText="Code" width="40%">
+								<h:outputText value="#{nationality.code}" />
+							</p:column>
+						</p:dataTable>
+					</p:tab>
+					<p:tab title="Non-Disclosure Agreement">
+						<p:dataTable var="nda" style="width:100%" lazy="true"
+							value="#{manageLicenseBean.nDAList}" paginator="true"
+							paginatorAlwaysVisible="true" rows="10" resizableColumns="true"
+							paginatorPosition="bottom" sortBy="#{nda.userID}"
+							rowKey="#{nda.id}" id="license-nda">
+							<f:facet name="header">
+            					Non-Disclosure Agreement
+        					</f:facet>
+							<p:column headerText="User ID" width="100%">
+								<h:outputText value="#{nda.userID}" />
+							</p:column>
+						</p:dataTable>
+					</p:tab>
+				</p:tabView>
+
+
+
+			</p:dialog>
+		</h:form>
+
+	</ui:define>
+</ui:composition>
+</html>
